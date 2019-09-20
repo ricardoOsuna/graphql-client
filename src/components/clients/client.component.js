@@ -25,7 +25,7 @@ class Client extends Component {
     success: {
       ok: false,
       message: undefined
-    }
+    },
   };
 
   componentDidMount() {
@@ -37,15 +37,29 @@ class Client extends Component {
     this.setState({ client });
   }
 
+  removeItem = (item, index) => {
+    let { client } = this.state;
+    if (parseInt(client[item][index].default)) {
+      console.log('the item is default option');
+    } else {
+      client[item] = client[item].filter((data, index2) => index2 !== index);
+      this.setState({
+        client
+      });
+    }
+  };
+
   render() {
+    let { client } = this.props;
     // const { error, success } = this.state;
-    const { createClient, client, buttonName } = this.props;
+    const { emails, phones } = this.state.client;
+    const { createClient, buttonName } = this.props;
 
     if (createClient) {
       const { email, phone } = this.props;
-      const { emails, phones } = this.state.client;
       emails.push(email);
       phones.push(phone);
+      client = this.state.client;
     } else {
       this.setState({ client });
     }
@@ -102,41 +116,43 @@ class Client extends Component {
             <label>Status</label>
             <select className="form-control"
               onChange={ e => setClient(e, 'status') }>
-              <option value="1" selected>ENABLED</option>
-              <option value="0">DISABLED</option>
+              <option value="1" selected={parseInt(client.status)}>ENABLED</option>
+              <option value="0" selected={!parseInt(client.status)}>DISABLED</option>
             </select>
           </div>
         </div>
 
-        { this.state.emails.map((item, index) => (
+        { emails.map((item, index) => (
           <Item
             index={index}
-            status={item.status}
+            itemDefault={item.default}
             itemName='Email'
             inputType='email'
+            removeItem={this.removeItem}
           />
         ))}
 
         <div className="form-group d-flex justify-content-center col-m-12">
           <button type="button"
-            className="btn btn-info"
+            className="btn btn-warning"
             onClick={ () => this.setItems('emails')}>
               New Email
             </button>
         </div>
 
-        { this.state.phones.map((item, index) => (
+        { phones.map((item, index) => (
           <Item
             index={index}
-            status={item.status}
+            itemDefault={item.default}
             itemName='Phone'
             inputType='number'
+            removeItem={this.removeItem}
           />
         ))}
 
         <div className="form-group d-flex justify-content-center col-m-12">
           <button type="button"
-            className="btn btn-info"
+            className="btn btn-warning"
             onClick={ () => this.setItems('phones')}>
               New Phone
             </button>

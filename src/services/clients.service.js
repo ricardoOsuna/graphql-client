@@ -1,18 +1,23 @@
 export const setClient = (e, field = '', type = '') => {
-  const client = JSON.parse(localStorage.getItem('client'));
+  const item = { reference: '', default: 0 }
+  let client = JSON.parse(localStorage.getItem('client'));
 
-  switch(type) {
-    case 'emails':
-      client.emails.push({ email: '', reference: '', default: 0 });
-    break;
-    case 'phones':
-      client.phones.push({ phone: '', reference: '', default: 0 });
-    break;
-    default:
-      client[`${field}`] = e.target.value;
-  }
+  console.log('localstorage => ', JSON.parse(localStorage.getItem('client')));
+  client.emails.push({ email: '', ...item });
 
-  localStorage.setItem('client', JSON.stringify(client));
+  // switch(type) {
+  //   case 'emails':
+  //     client.emails.push({ email: '', ...item });
+  //   break;
+  //   case 'phones':
+  //     client.phones.push({ phone: '', ...item });
+  //   break;
+  //   default:
+  //     client[`${field}`] = e.target.value;
+  // }
+  console.log('client => ', client);
+
+  // localStorage.setItem('client', JSON.stringify(client));
   if (type === 'emails' || type === 'phones') {
     return client;
   }
@@ -31,7 +36,7 @@ export const getClient = e => {
       birthdate,
       age: !isNaN(parseInt(age)) ? parseInt(age) : 0,
       company,
-      status: !isNaN(parseInt(status)) ? parseInt(status) : 0,
+      status: !isNaN(parseInt(status)) ? parseInt(status) : 1,
     }
   }
 
