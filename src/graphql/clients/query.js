@@ -11,3 +11,16 @@ export const GET_CLIENTS = gql `{
     status
   }
 }`
+
+export const GET_CLIENT = gql `
+query getClient($id: ID) {
+  getClient(_id: $id) {
+    _id
+    firstName
+    lastName
+    age
+    birthdate
+    company
+    status
+  }
+}`;

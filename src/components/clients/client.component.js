@@ -1,77 +1,31 @@
 import React, { Component, Fragment} from 'react'
 
-// Components
-import Item from '../item.component';
-
-// Services
-import {
-  setClientService,
-  removeItemservice,
-  setItemService
-} from '../../services/clients.service';
-
 class Client extends Component {
+  componentWillMount() {
+    if (this.props.client) {
+      this.setState(this.props.client);
+    }
+  }
+
   state = {
-    client: {
-      firstName: '',
-      lastName: '',
-      birthdate: '',
-      age: 0,
-      company: '',
-      status: 1,
-      emails: [],
-      phones: [],
-    },
-    error: {
-      err: false,
-      msg: undefined
-    },
-    success: {
-      ok: false,
-      msg: undefined
-    },
+    firstName: '',
+    lastName: '',
+    birthdate: '',
+    age: 0,
+    company: '',
+    status: 1,
+  }
+
+  setClient = (e, field) => {
+    let data = this.state;
+    data[`${field}`] = e.target.value;
+    this.setState(data);
+    localStorage.setItem('client', JSON.stringify(data));
   };
 
-  // Load data before render app
-  componentWillMount() {
-    let { client } = this.state;
-    const { createClient } = this.props;
-    const { emails, phones } = client;
-
-    if (createClient) {
-      const { email, phone } = this.props;
-      emails.push(email);
-      phones.push(phone);
-    } else {
-      client = this.props.client;
-      this.setState({ client });
-    }
-    localStorage.setItem('client', JSON.stringify(client));
-  }
-
-  // Add any email/phone
-  addItems = item => {
-    this.setState({ client: setClientService('', '', item, this.state.client) });
-  }
-
-  // set any email/phone
-  setItems = (e, index, field, item) => {
-    if (field === 'default') {
-      this.setState({ client: setItemService(e, index, field, item)});
-    }
-  }
-
-  // Remove any email/phone
-  removeItem = (item, index) => {
-    this.setState(removeItemservice(this.state, item, index));
-  }
-
   render() {
-    const { buttonName } = this.props;
-    const { emails, phones } = this.state.client;
-    const { client, /*error, success*/ } = this.state;
-
-    return(
+    const { firstName, lastName, birthdate, age, company, status } = this.state;
+    return (
       <Fragment>
         <div className="form-row">
           <div className="form-group col-md-6">
@@ -79,17 +33,19 @@ class Client extends Component {
             <input type="text"
               className="form-control"
               placeholder="First Name"
+              defaultValue={firstName}
               autoFocus
               required
-              onChange={ e => setClientService(e, 'firstName') }/>
+              onChange={ e => this.setClient(e, 'firstName') }/>
           </div>
           <div className="form-group col-md-6">
             <label>Last Name</label>
             <input type="text"
               className="form-control"
               placeholder="Last Name"
+              defaultValue={lastName}
               required
-              onChange={ e => setClientService(e, 'lastName') }/>
+              onChange={ e => this.setClient(e, 'lastName') }/>
           </div>
         </div>
 
@@ -99,14 +55,16 @@ class Client extends Component {
             <input type="date"
               className="form-control"
               placeholder="Birthdate"
-              onChange={ e => setClientService(e, 'birthdate') }/>
+              defaultValue={birthdate}
+              onChange={ e => this.setClient(e, 'birthdate') }/>
           </div>
           <div className="form-group col-md-6">
             <label>Age</label>
             <input type="number"
               className="form-control"
               placeholder="Age"
-              onChange={ e => setClientService(e, 'age') }/>
+              defaultValue={age}
+              onChange={ e => this.setClient(e, 'age') }/>
           </div>
         </div>
 
@@ -116,66 +74,22 @@ class Client extends Component {
             <input type="text"
               className="form-control"
               placeholder="Company"
-              required={false}
-              onChange={ e => setClientService(e, 'company') }/>
+              defaultValue={company}
+              required
+              onChange={ e => this.setClient(e, 'company') }/>
           </div>
           <div className="form-group col-md-6">
             <label>Status</label>
             <select className="form-control"
-              onChange={ e => setClientService(e, 'status') }>
-              <option value="1" selected={parseInt(client.status)}>ENABLED</option>
-              <option value="0" selected={!parseInt(client.status)}>DISABLED</option>
+              onChange={ e => this.setClient(e, 'status') }>
+              <option value="1" selected={parseInt(status)}>ENABLED</option>
+              <option value="0" selected={!parseInt(status)}>DISABLED</option>
             </select>
           </div>
-        </div>
-
-        {/* TODO: */}
-        { emails.map((item, index) => (
-          <Item
-            index={index}
-            itemDefault={item.default}
-            itemName='Email'
-            inputType='email'
-            setItems={this.setItems}
-            removeItem={this.removeItem}
-          />
-        ))}
-
-        <div className="form-group d-flex justify-content-center col-m-12">
-          <button type="button"
-            className="btn btn-warning"
-            onClick={ () => this.addItems('emails')}>
-              New Email
-            </button>
-        </div>
-
-        {/* TODO: */}
-        { phones.map((item, index) => (
-          <Item
-            index={index}
-            itemDefault={item.default}
-            itemName='Phone'
-            inputType='number'
-            setItems={this.setItems}
-            removeItem={this.removeItem}
-          />
-        ))}
-
-        <div className="form-group d-flex justify-content-center col-m-12">
-          <button type="button"
-            className="btn btn-warning"
-            onClick={ () => this.addItems('phones')}>
-              New Phone
-            </button>
-        </div>
-
-        <div className="form-group d-flex justify-content-center col-m-12">
-          <button type="submit"
-            className="btn btn-success">{ buttonName }</button>
         </div>
       </Fragment>
     );
   };
-};
+}
 
 export default Client;

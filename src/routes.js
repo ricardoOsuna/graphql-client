@@ -18,7 +18,7 @@ const Routes = () => (
       {/* Clients */}
       <Route exact path="/clients" component={IndexClient} />
       <Route exact path="/clients/new" component={CreateClient} />
-      <Route exact path="/clients/edit/:id" component={UpdateClient} />
+      <Route exact path="/clients/edit/:clientId" component={UpdateClient} />
     </Switch>
   </div>
 );

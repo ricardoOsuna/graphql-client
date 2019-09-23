@@ -9,6 +9,8 @@ mutation createClient($input: CreateClientInput) {
     birthdate
     company
     status
+    emails
+    phones
   }
 }`;
 
