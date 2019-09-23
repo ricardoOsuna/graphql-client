@@ -4,7 +4,11 @@ import React, { Component, Fragment} from 'react'
 import Item from '../item.component';
 
 // Services
-import { setClient } from '../../services/clients.service';
+import {
+  setClientService,
+  removeItemservice,
+  setItemService
+} from '../../services/clients.service';
 
 class Client extends Component {
   state = {
@@ -20,49 +24,52 @@ class Client extends Component {
     },
     error: {
       err: false,
-      message: undefined
+      msg: undefined
     },
     success: {
       ok: false,
-      message: undefined
+      msg: undefined
     },
   };
 
-  componentDidMount() {
-    localStorage.setItem('client', JSON.stringify(this.state.client));
-  }
-
-  setItems = type => {
-    const client = setClient('', '', type);
-    this.setState({ client });
-  }
-
-  removeItem = (item, index) => {
+  // Load data before render app
+  componentWillMount() {
     let { client } = this.state;
-    if (parseInt(client[item][index].default)) {
-      console.log('the item is default option');
-    } else {
-      client[item] = client[item].filter((data, index2) => index2 !== index);
-      this.setState({
-        client
-      });
-    }
-  };
-
-  render() {
-    let { client } = this.props;
-    // const { error, success } = this.state;
-    const { emails, phones } = this.state.client;
-    const { createClient, buttonName } = this.props;
+    const { createClient } = this.props;
+    const { emails, phones } = client;
 
     if (createClient) {
       const { email, phone } = this.props;
       emails.push(email);
       phones.push(phone);
-      client = this.state.client;
     } else {
+      client = this.props.client;
       this.setState({ client });
     }
+    localStorage.setItem('client', JSON.stringify(client));
+  }
+
+  // Add any email/phone
+  addItems = item => {
+    this.setState({ client: setClientService('', '', item, this.state.client) });
+  }
+
+  // set any email/phone
+  setItems = (e, index, field, item) => {
+    if (field === 'default') {
+      this.setState({ client: setItemService(e, index, field, item)});
+    }
+  }
+
+  // Remove any email/phone
+  removeItem = (item, index) => {
+    this.setState(removeItemservice(this.state, item, index));
+  }
+
+  render() {
+    const { buttonName } = this.props;
+    const { emails, phones } = this.state.client;
+    const { client, /*error, success*/ } = this.state;
 
     return(
       <Fragment>
@@ -74,7 +81,7 @@ class Client extends Component {
               placeholder="First Name"
               autoFocus
               required
-              onChange={ e => setClient(e, 'firstName') }/>
+              onChange={ e => setClientService(e, 'firstName') }/>
           </div>
           <div className="form-group col-md-6">
             <label>Last Name</label>
@@ -82,7 +89,7 @@ class Client extends Component {
               className="form-control"
               placeholder="Last Name"
               required
-              onChange={ e => setClient(e, 'lastName') }/>
+              onChange={ e => setClientService(e, 'lastName') }/>
           </div>
         </div>
 
@@ -92,14 +99,14 @@ class Client extends Component {
             <input type="date"
               className="form-control"
               placeholder="Birthdate"
-              onChange={ e => setClient(e, 'birthdate') }/>
+              onChange={ e => setClientService(e, 'birthdate') }/>
           </div>
           <div className="form-group col-md-6">
             <label>Age</label>
             <input type="number"
               className="form-control"
               placeholder="Age"
-              onChange={ e => setClient(e, 'age') }/>
+              onChange={ e => setClientService(e, 'age') }/>
           </div>
         </div>
 
@@ -110,24 +117,26 @@ class Client extends Component {
               className="form-control"
               placeholder="Company"
               required={false}
-              onChange={ e => setClient(e, 'company') }/>
+              onChange={ e => setClientService(e, 'company') }/>
           </div>
           <div className="form-group col-md-6">
             <label>Status</label>
             <select className="form-control"
-              onChange={ e => setClient(e, 'status') }>
+              onChange={ e => setClientService(e, 'status') }>
               <option value="1" selected={parseInt(client.status)}>ENABLED</option>
               <option value="0" selected={!parseInt(client.status)}>DISABLED</option>
             </select>
           </div>
         </div>
 
+        {/* TODO: */}
         { emails.map((item, index) => (
           <Item
             index={index}
             itemDefault={item.default}
             itemName='Email'
             inputType='email'
+            setItems={this.setItems}
             removeItem={this.removeItem}
           />
         ))}
@@ -135,17 +144,19 @@ class Client extends Component {
         <div className="form-group d-flex justify-content-center col-m-12">
           <button type="button"
             className="btn btn-warning"
-            onClick={ () => this.setItems('emails')}>
+            onClick={ () => this.addItems('emails')}>
               New Email
             </button>
         </div>
 
+        {/* TODO: */}
         { phones.map((item, index) => (
           <Item
             index={index}
             itemDefault={item.default}
             itemName='Phone'
             inputType='number'
+            setItems={this.setItems}
             removeItem={this.removeItem}
           />
         ))}
@@ -153,7 +164,7 @@ class Client extends Component {
         <div className="form-group d-flex justify-content-center col-m-12">
           <button type="button"
             className="btn btn-warning"
-            onClick={ () => this.setItems('phones')}>
+            onClick={ () => this.addItems('phones')}>
               New Phone
             </button>
         </div>

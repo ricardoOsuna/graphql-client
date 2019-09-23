@@ -6,9 +6,10 @@ import { CREATE_CLIENT } from '../../graphql/clients/mutation';
 import Client from './client.component';
 
 // Serviices
-import { getClient } from '../../services/clients.service';
+import { getClientService } from '../../services/clients.service';
 
 class CreateClient extends Component {
+
   render() {
     return (
       <Fragment>
@@ -16,7 +17,6 @@ class CreateClient extends Component {
         <div className="row justify-content-center">
           <Mutation onError={ err =>  console.error(err) }
             onCompleted={res => {
-              console.log(res);
               localStorage.removeItem('client');
               this.props.history.concat('/');
             }}
@@ -24,7 +24,7 @@ class CreateClient extends Component {
            { createClient => (
               <form className="col-md-8 m-3"
                 onSubmit={ e => {
-                  const input = getClient();
+                  const input = getClientService();
                   createClient({
                     variables: { input }
                   });
