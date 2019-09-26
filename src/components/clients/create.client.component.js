@@ -64,19 +64,19 @@ class CreateClient extends Component {
         <h2 className="text-center">New Client</h2>
         {/* { this.showMessage } */}
         <div className="row justify-content-center">
-          <Mutation onError={ err => console.error(err) }
-            onCompleted={ res => {
+          <Mutation mutation={CREATE_CLIENT}
+            onError={ err => console.error(err) }
+            onCompleted={ () => {
               localStorage.removeItem('client');
               this.props.history.concat('/');
-            }}
-            mutation={CREATE_CLIENT}>
-           { createClient => (
-              <form className="col-md-8 m-3" onSubmit={ e => {
+            }}>
+            { createClient => (
+              <form className="col-md-10 m-5"
+                onSubmit={ e => {
                   e.preventDefault();
                   const input = getClientService();
-                  console.log('client => ', input);
                   createClient({
-                    variables: { input }
+                    variables: {input}
                   });
                 }}>
                 <Client

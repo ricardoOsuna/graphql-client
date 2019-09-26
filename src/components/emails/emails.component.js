@@ -1,18 +1,18 @@
 import React, { Component, Fragment } from 'react'
 
 // Components
-import Item from '../item.component';
+import Item from '../items/item.component';
 
 // Services
-import { setItemServices, removeItemServices, addItemServices } from '../../services/items.service';
+import {
+  setItemServices,
+  removeItemServices,
+  addItemServices
+} from '../../services/items.service';
 
 class Emails extends Component {
   state = {
     emails: this.props.emails,
-  };
-
-  addItems = () => {
-    this.setState({ emails: addItemServices(this.state.emails, 'emails') });
   };
 
   setItems = (e, index, field) => {
@@ -23,27 +23,29 @@ class Emails extends Component {
     this.setState({ emails: removeItemServices(index, this.state.emails, 'emails')});
   };
 
+  // TODO: Create a table to view the emails better than rigth now
   render() {
     const { emails } = this.state;
     return (
       <Fragment>
-        {/* TODO: */}
-        { emails.map((item, index) => (
-          <Item
-            item={item}
-            index={index}
-            itemName='Email'
-            setItems={this.setItems}
-            removeItem={this.removeItem}
-          />
-        ))}
+        { emails.map((item, index) => {
+          return (
+            <Item
+              item={item}
+              index={index}
+              itemName='Email'
+              setItems={this.setItems}
+              removeItem={this.removeItem}
+            />
+          );
+        })}
 
         <div className="form-group d-flex justify-content-center col-m-12">
           <button type="button"
             className="btn btn-warning"
-            onClick={ () => this.addItems('emails')}>
-              New Email
-            </button>
+            onClick={ () => this.setState({ emails: addItemServices(emails, 'emails')})}>
+            New Email
+          </button>
         </div>
       </Fragment>
     );

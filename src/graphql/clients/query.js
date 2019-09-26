@@ -13,7 +13,7 @@ export const GET_CLIENTS = gql `{
 }`
 
 export const GET_CLIENT = gql `
-query getClient($id: ID) {
+query GetClient($id: ID) {
   getClient(_id: $id) {
     _id
     firstName

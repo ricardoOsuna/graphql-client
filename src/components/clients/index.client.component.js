@@ -2,11 +2,12 @@ import React, { Fragment } from 'react'
 import { Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
 
+// GraphQL
 import { GET_CLIENTS } from '../../graphql/clients/query'
 
 const IndexClient = () => (
   <Query query = { GET_CLIENTS }>
-    {({ loading, error, data }) => {
+    { ({ loading, error, data }) => {
       if (loading) return 'Loading...'
       if (error) return `Error: ${error.message}`
       return (

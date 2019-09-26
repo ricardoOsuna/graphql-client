@@ -7,9 +7,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Header from './components/header.component'
 import Routes from './routes'
 
-require('dotenv').config();
-// const serverPort = process.env.SERVER_PORT;
-
 const client = new ApolloClient({
   uri: `http://localhost:${4000}/graphql`,
   onError: ({ networkError, graphqlError }) => {

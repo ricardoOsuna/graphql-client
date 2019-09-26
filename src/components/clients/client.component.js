@@ -1,9 +1,13 @@
 import React, { Component, Fragment} from 'react'
+import moment from 'moment';
 
 class Client extends Component {
   componentWillMount() {
     if (this.props.client) {
-      this.setState(this.props.client);
+      this.setState({
+        ...this.props.client,
+        birthdate: moment(this.props.birthdate).format('DD/MM/YYYY'),
+      });
     }
   }
 

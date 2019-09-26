@@ -1,18 +1,18 @@
 import React, { Component, Fragment } from 'react'
 
 // Components
-import Item from '../item.component';
+import Item from '../items/item.component';
 
 // Services
-import { setItemServices, removeItemServices, addItemServices } from '../../services/items.service';
+import {
+  setItemServices,
+  removeItemServices,
+  addItemServices
+} from '../../services/items.service';
 
 class Phones extends Component {
   state = {
     phones: this.props.phones,
-  };
-
-  addItems = () => {
-    this.setState({ phones: addItemServices(this.state.phones, 'phones') });
   };
 
   setItems = (e, index, field) => {
@@ -23,11 +23,11 @@ class Phones extends Component {
     this.setState({ phones: removeItemServices(index, this.state.phones, 'phones')})
   };
 
+  // TODO: Create a table to view the phones better than rigth now
   render() {
     const { phones } = this.state;
     return (
       <Fragment>
-        {/* TODO: */}
         { phones.map((item, index) => (
           <Item
             item={item}
@@ -41,9 +41,9 @@ class Phones extends Component {
         <div className="form-group d-flex justify-content-center col-m-12">
           <button type="button"
             className="btn btn-warning"
-            onClick={ () => this.addItems('phones')}>
-              New Phone
-            </button>
+            onClick={ () => this.setState({ phones: addItemServices(phones, 'phones')})}>
+            New Phone
+          </button>
         </div>
       </Fragment>
     );
