@@ -15,17 +15,11 @@ export const setItemServices = (e, index, field, item, itemName) => {
     const isDefault = (field === 'default') ? true : false;
 
     if (isDefault) {
-      if (item.length === 1) {
-        item[index].default = 1;
-      } else {
-        item = item.map(x => {
-          return { ...x, default: 0 };
-        });
-        item[index][`${field}`] = parseInt(e.target.value);
-      }
-    } else {
-      item[index][`${field}`] = e.target.value;
+      item = item.map(x => {
+        return { ...x, default: 0 };
+      });
     }
+    item[index][`${field}`] = isDefault ?  parseInt(e.target.value) : e.target.value;
     setClient(item, itemName);
   }
 
@@ -33,7 +27,6 @@ export const setItemServices = (e, index, field, item, itemName) => {
 };
 
 export const removeItemServices = (index, item, itemName) => {
-
   if (item.length === 1) {
     item[index].default = 1;
   } else if (!item[index].default) {

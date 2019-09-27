@@ -5,13 +5,13 @@ import React, { Component, Fragment } from 'react'
 import { GET_CLIENT } from '../../graphql/clients/query';
 import { GET_EMAILS_BY_CLIENT } from '../../graphql/emails/query';
 import { GET_PHONES_BY_CLIENT } from '../../graphql/phones/query';
+import { UPDATE_CLIENT } from '../../graphql/clients/mutation';
 
 // Components
 import Client from './client.component';
-import Emails from '../emails/emails.component';
-import Phones from '../phones/phones.component';
-import ButtonSubmit from '../button.submit.component';
-import { UPDATE_CLIENT } from '../../graphql/clients/mutation';
+import CreateEmails from '../emails/create.emails.component';
+import CreatePhones from '../phones/create.phones.component';
+import Loading from '../loading.component';
 
 class UpdateClient extends Component {
   state = {
@@ -39,52 +39,57 @@ class UpdateClient extends Component {
         <div className="row justify-content-center">
           <Query query={GET_CLIENT} variables={{ id }}>{
             ({ loading, error, data }) => {
-              if (loading) return 'Loading...'
               if (error) return `Error => ${error.message}`
+              if (loading) return <Loading/>
               return (
                 <Fragment>
                   {/* Client component */}
-                  <Mutation mutation={UPDATE_CLIENT}
+                  {/* <Mutation mutation={UPDATE_CLIENT}
                     onError={ err => console.error(err)}
-                    onCompleted={ res => console.log(res)}>{
+                    onCompleted={ () => this.props.history.push('/')}>{
                       updateClient => (
-                        <form className="col-md-10 mt-5"
+                        <form className="col-md-9 mt-5"
                           onSubmit={ e => {
                             e.preventDefault();
                             updateClient({
                               variables: { input: JSON.parse(localStorage.getItem('client'))}
                             })
                           }}>
-                          <Client client={data.getClient} />
+                          <Client client={{...data.getClient, _id: id}} />
+                          <div className="form-group d-flex justify-content-center bg-primary m-0 p-2 fixed-bottom">
+                            <button type="submit" className="btn btn-success">Save Changes</button>
+                          </div>
                         </form>
                       )
                     }
-                  </Mutation>
+                  </Mutation> */}
                   {/* Get data for emails component */}
                   <Query query={GET_EMAILS_BY_CLIENT} variables={{ clientId: id }}>{
                     emails => {
-                      if (emails.loading) return 'Loading...';
                       if (emails.error) return `Error => ${emails.error.message}`;
+                      if (emails.loading) return <Loading/>;
                       return (
-                        <form className="col-md-10 mt-5">
-                          <Emails emails={emails.data.getEmailsByClient}/>
+                        <form className="col-md-9 mt-5">
+                          <CreateEmails emails={emails.data.getEmailsByClient}/>
+                          <div className="form-group d-flex justify-content-center bg-primary m-0 p-2 fixed-bottom">
+                            <button type="submit" className="btn btn-success">Update emails</button>
+                          </div>
                         </form>
                       )
                     }
                   }</Query>
                   {/* Get data for phones component */}
-                  <Query query={GET_PHONES_BY_CLIENT} variables={{ clientId: id }}>{
+                  {/* <Query query={GET_PHONES_BY_CLIENT} variables={{ clientId: id }}>{
                     phones => {
-                      if (phones.loading) return 'Loading...';
                       if (phones.error) return `Error => ${phones.error.message}`;
+                      if (phones.loading) return <Loading/>;
                       return (
-                        <form className="col-md-10 mt-5">
-                          <Phones phones={phones.data.getPhonesByClient}/>
+                        <form className="col-md-9 mt-5">
+                          <CreatePhones phones={phones.data.getPhonesByClient}/>
                         </form>
                       )
                     }
-                  }</Query>
-                  {/* <ButtonSubmit status='btn-success' text='Save'/> */}
+                  }</Query> */}
                 </Fragment>
               );
             }

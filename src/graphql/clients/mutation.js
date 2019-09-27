@@ -22,7 +22,7 @@ mutation CreateClient($input: CreateClientInput) {
 }`;
 
 export const UPDATE_CLIENT = gql`
-mutation UpdateClient($input: updateClientInput) {
+mutation UpdateClient($input: UpdateClientInput) {
   updateClient(input: $input) {
     firstName
     lastName

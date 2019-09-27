@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 
 const Header = () => (
-  <nav className="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between d-flex mb-4">
+  <nav className="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between d-flex mb-3">
     <div className="container">
       <Link to="/" className="navbar-brand text-light font-weight-bold">CRM</Link>
       <button className="navbar-toggler"

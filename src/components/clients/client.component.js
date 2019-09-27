@@ -1,23 +1,16 @@
 import React, { Component, Fragment} from 'react'
-import moment from 'moment';
 
 class Client extends Component {
-  componentWillMount() {
-    if (this.props.client) {
-      this.setState({
-        ...this.props.client,
-        birthdate: moment(this.props.birthdate).format('DD/MM/YYYY'),
-      });
-    }
+  state = {
+    ...this.props.client
   }
 
-  state = {
-    firstName: '',
-    lastName: '',
-    birthdate: '',
-    age: 0,
-    company: '',
-    status: 1,
+  componentDidMount() {
+    if (this.props.client.__typename) {
+      delete this.props.client.__typename;
+      this.setState({ ...this.props.client });
+    }
+    localStorage.setItem('client', JSON.stringify(this.state));
   }
 
   setClient = (e, field) => {
@@ -28,7 +21,7 @@ class Client extends Component {
   };
 
   render() {
-    const { firstName, lastName, birthdate, age, company, status } = this.state;
+    const { _id, firstName, lastName, birthdate, age, company, status } = this.state;
     return (
       <Fragment>
         <div className="form-row">
@@ -82,14 +75,16 @@ class Client extends Component {
               required
               onChange={ e => this.setClient(e, 'company') }/>
           </div>
-          <div className="form-group col-md-6">
-            <label>Status</label>
-            <select className="form-control"
-              onChange={ e => this.setClient(e, 'status') }>
-              <option value="1" selected={parseInt(status)}>ENABLED</option>
-              <option value="0" selected={!parseInt(status)}>DISABLED</option>
-            </select>
-          </div>
+          { !_id && (
+            <div className="form-group col-md-6">
+              <label>Status</label>
+              <select className="form-control"
+                onChange={ e => this.setClient(e, 'status') }>
+                <option value="1" selected={parseInt(status)}>ENABLED</option>
+                <option value="0" selected={!parseInt(status)}>DISABLED</option>
+              </select>
+            </div>
+          )}
         </div>
       </Fragment>
     );

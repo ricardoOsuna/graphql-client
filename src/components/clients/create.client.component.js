@@ -5,15 +5,13 @@ import React, { Component, Fragment } from 'react';
 import { CREATE_CLIENT } from '../../graphql/clients/mutation';
 
 // Components
+import Modal from '../modal.component';
 import Client from './client.component';
-import Emails from '../emails/emails.component';
-import Phones from '../phones/phones.component';
-import ButtonSubmit from '../button.submit.component';
+import CreateEmails from '../emails/create.emails.component';
+import CreatePhones from '../phones/create.phones.component';
 
 // Services
-import {
-  getClientService
-} from '../../services/clients.service';
+import { getClientService } from '../../services/clients.service';
 
 class CreateClient extends Component {
   state = {
@@ -27,71 +25,56 @@ class CreateClient extends Component {
       emails: [{ email: '', reference: '', default: 1 }],
       phones: [{ phone: '', reference: '', default: 1 }],
     },
-    error: {
-      err: false,
-      msg: undefined
-    },
-    success: {
-      ok: false,
-      msg: undefined
-    },
+    openModal: false,
   };
 
-  componentDidMount() {
-    localStorage.setItem('client', JSON.stringify(this.state.client));
-  };
-
-  // Show any message of error or success response
-  showMessage = () => {
-    const { error, success } = this.state;
-
-    let alertType, alertMessage;
-    if (error.err) {
-      alertType = 'btn-danger';
-      alertMessage = error.msg;
-    } else if (success.ok) {
-      alertType = 'btn-info';
-      alertMessage = success.msg;
-    }
-
-    return (error.er || success.ok) ? <p className={`alert ${alertType} p-3 text-center`}>{alertMessage}</p> : '';
-  };
+  modalStatus = () => {
+    this.setState({ openModal: !this.state.openModal})
+  }
 
   render() {
-    const { client } = this.state;
+    const { emails, phones } = this.state;
     return (
       <Fragment>
         <h2 className="text-center">New Client</h2>
-        {/* { this.showMessage } */}
         <div className="row justify-content-center">
           <Mutation mutation={CREATE_CLIENT}
             onError={ err => console.error(err) }
             onCompleted={ () => {
               localStorage.removeItem('client');
-              this.props.history.concat('/');
+              this.props.history.push('/');
             }}>
             { createClient => (
               <form className="col-md-10 m-5"
                 onSubmit={ e => {
                   e.preventDefault();
-                  const input = getClientService();
                   createClient({
-                    variables: {input}
+                    variables: { input: getClientService() }
                   });
                 }}>
+                <h3 className="text-center">General Information</h3>
                 <Client
-                  client={client}
+                  client={this.state}
                 />
-                <Emails
-                  emails={client.emails}
+                <h3 className="text-center">Contact Information</h3>
+                <CreateEmails
+                  emails={emails}
                 />
-                <Phones
-                  phones={client.phones}
+                <CreatePhones
+                  phones={phones}
                 />
-                <ButtonSubmit
-                  status='btn-success'
-                  text='Save'
-                />
+                <div className="form-group d-flex justify-content-center bg-primary m-0 p-2 fixed-bottom">
+                  <button type="button"
+                    className="btn btn-success"
+                    data-toggle="modal"
+                    before
+                    onClick={() => this.modalStatus() }>Save</button>
+                </div>
+                <Modal modalId='createClient'
+                  title='Create A New Client'
+                  message='Are you sure to create a new client?'
+                  btnMessage='Save Changes'
+                  modalStatus={this.modalStatus} />
               </form>
             )}
           </Mutation>

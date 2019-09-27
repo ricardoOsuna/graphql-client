@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 
 // Components
-import Item from '../items/item.component';
+import CreateItem from '../items/create.item.component';
 
 // Services
 import {
@@ -10,9 +10,9 @@ import {
   addItemServices
 } from '../../services/items.service';
 
-class Emails extends Component {
+class CreateEmails extends Component {
   state = {
-    emails: this.props.emails,
+    emails: this.props.emails
   };
 
   setItems = (e, index, field) => {
@@ -20,17 +20,28 @@ class Emails extends Component {
   };
 
   removeItem = index => {
-    this.setState({ emails: removeItemServices(index, this.state.emails, 'emails')});
+    const emails = removeItemServices(index, this.state.emails, 'emails');
+    if (emails) {
+      this.setState({ emails });
+    }
   };
 
   // TODO: Create a table to view the emails better than rigth now
   render() {
     const { emails } = this.state;
     return (
-      <Fragment>
+      <div className="pb-5">
+        <div className="form-group d-flex justify-content-left col-m-12">
+          <button type="button"
+            className="btn btn-warning"
+            onClick={ () => this.setState({ emails: addItemServices(emails, 'emails')})}>
+            New Email
+          </button>
+        </div>
+
         { emails.map((item, index) => {
           return (
-            <Item
+            <CreateItem
               item={item}
               index={index}
               itemName='Email'
@@ -39,17 +50,9 @@ class Emails extends Component {
             />
           );
         })}
-
-        <div className="form-group d-flex justify-content-center col-m-12">
-          <button type="button"
-            className="btn btn-warning"
-            onClick={ () => this.setState({ emails: addItemServices(emails, 'emails')})}>
-            New Email
-          </button>
-        </div>
-      </Fragment>
+      </div>
     );
   }
 };
 
-export default Emails;
+export default CreateEmails;
