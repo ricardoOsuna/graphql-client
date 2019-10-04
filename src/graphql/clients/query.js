@@ -1,7 +1,8 @@
 import gql from 'graphql-tag';
 
-export const GET_CLIENTS = gql `{
-  getClients {
+export const GET_CLIENTS = gql `
+query GetClients($limit: Int, $offset: Int) {
+  getClients(limit: $limit, offset: $offset) {
     _id
     firstName
     lastName
@@ -10,11 +11,12 @@ export const GET_CLIENTS = gql `{
     company
     status
   }
-}`
+  countClients
+}`;
 
 export const GET_CLIENT = gql `
-query GetClient($id: ID) {
-  getClient(_id: $id) {
+query GetClient($_id: ID!) {
+  getClient(_id: $_id) {
     _id
     firstName
     lastName
@@ -22,5 +24,6 @@ query GetClient($id: ID) {
     birthdate
     company
     status
+    createdAt
   }
 }`;

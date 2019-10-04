@@ -5,7 +5,7 @@ import React, { Component, Fragment } from 'react';
 import { CREATE_CLIENT } from '../../graphql/clients/mutation';
 
 // Components
-import Modal from '../modal.component';
+// import Modal from '../modal.component';
 import Client from './client.component';
 import CreateEmails from '../emails/create.emails.component';
 import CreatePhones from '../phones/create.phones.component';
@@ -19,7 +19,7 @@ class CreateClient extends Component {
       firstName: '',
       lastName: '',
       birthdate: '',
-      age: 0,
+      age: 18,
       company: '',
       status: 1,
       emails: [{ email: '', reference: '', default: 1 }],
@@ -33,7 +33,7 @@ class CreateClient extends Component {
   }
 
   render() {
-    const { emails, phones } = this.state;
+    const { emails, phones } = this.state.client;
     return (
       <Fragment>
         <h2 className="text-center">New Client</h2>
@@ -48,13 +48,14 @@ class CreateClient extends Component {
               <form className="col-md-10 m-5"
                 onSubmit={ e => {
                   e.preventDefault();
+                  console.log('getClientService => ', getClientService());
                   createClient({
                     variables: { input: getClientService() }
                   });
                 }}>
                 <h3 className="text-center">General Information</h3>
                 <Client
-                  client={this.state}
+                  client={this.state.client}
                 />
                 <h3 className="text-center">Contact Information</h3>
                 <CreateEmails
@@ -64,17 +65,13 @@ class CreateClient extends Component {
                   phones={phones}
                 />
                 <div className="form-group d-flex justify-content-center bg-primary m-0 p-2 fixed-bottom">
-                  <button type="button"
-                    className="btn btn-success"
-                    data-toggle="modal"
-                    before
-                    onClick={() => this.modalStatus() }>Save</button>
+                  <button type="submit" className="btn btn-success">Save</button>
                 </div>
-                <Modal modalId='createClient'
+                {/* <Modal modalId='createClient'
                   title='Create A New Client'
                   message='Are you sure to create a new client?'
                   btnMessage='Save Changes'
-                  modalStatus={this.modalStatus} />
+                  modalStatus={this.modalStatus} /> */}
               </form>
             )}
           </Mutation>

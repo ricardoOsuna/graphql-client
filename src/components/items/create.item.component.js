@@ -13,7 +13,6 @@ const CreateItem = ({ item, index, itemName, setItems, removeItem }) => {
           placeholder={itemName}
           defaultValue={item[`${itemName.toLowerCase()}`]}
           className="form-control"
-          autoFocus
           required
           onChange={ e => setItems(e, index, itemName.toLowerCase(), itemType) }/>
       </div>

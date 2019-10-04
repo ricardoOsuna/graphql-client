@@ -6,10 +6,6 @@ class Client extends Component {
   }
 
   componentDidMount() {
-    if (this.props.client.__typename) {
-      delete this.props.client.__typename;
-      this.setState({ ...this.props.client });
-    }
     localStorage.setItem('client', JSON.stringify(this.state));
   }
 

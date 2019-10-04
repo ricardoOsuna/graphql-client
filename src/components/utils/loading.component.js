@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 
 const Loading = () => (
-  <Fragment>
+  <div className="row justify-content-center">
     <div className="spinner-grow text-primary" role="status">
       <span className="sr-only">Loading...</span>
     </div>
@@ -26,7 +26,7 @@ const Loading = () => (
     <div className="spinner-grow text-dark" role="status">
       <span className="sr-only">Loading...</span>
     </div>
-  </Fragment>
+  </div>
 );
 
 export default Loading;

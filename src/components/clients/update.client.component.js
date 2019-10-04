@@ -1,17 +1,21 @@
 import { Query, Mutation } from 'react-apollo'
 import React, { Component, Fragment } from 'react'
 
-// GraphQL
+// GraphQL Query
 import { GET_CLIENT } from '../../graphql/clients/query';
-import { GET_EMAILS_BY_CLIENT } from '../../graphql/emails/query';
-import { GET_PHONES_BY_CLIENT } from '../../graphql/phones/query';
+// import { GET_EMAILS_BY_CLIENT } from '../../graphql/emails/query';
+// import { GET_EMAILS_BY_CLIENT } from '../../graphql/emails/query';
+
+// GraphQL Mutation
 import { UPDATE_CLIENT } from '../../graphql/clients/mutation';
+// import { CREATE_EMAIL, UPDATE_EMAIL } from '../../graphql/emails/mutation';
+// import { CREATE_PHONE, UPDATE_PHONE } from '../../graphql/phones/mutation';
 
 // Components
 import Client from './client.component';
-import CreateEmails from '../emails/create.emails.component';
-import CreatePhones from '../phones/create.phones.component';
-import Loading from '../loading.component';
+// import CreateEmails from '../emails/create.emails.component';
+// import CreatePhones from '../phones/create.phones.component';
+import Loading from '../utils/loading.component';
 
 class UpdateClient extends Component {
   state = {
@@ -32,39 +36,37 @@ class UpdateClient extends Component {
    * https://github.com/threepointone/react-ease/issues/4
    */
   render() {
-    const { id } = this.props.match.params;
+    const { _id } = this.props.match.params;
     return (
       <Fragment>
         <h2 className="text-center">Update Client</h2>
         <div className="row justify-content-center">
-          <Query query={GET_CLIENT} variables={{ id }}>{
-            ({ loading, error, data }) => {
+          <Query query={GET_CLIENT} variables={{ _id }}>{
+            ({ loading, error, data, refetch }) => {
               if (error) return `Error => ${error.message}`
               if (loading) return <Loading/>
               return (
                 <Fragment>
                   {/* Client component */}
-                  {/* <Mutation mutation={UPDATE_CLIENT}
+                  <Mutation mutation={UPDATE_CLIENT}
                     onError={ err => console.error(err)}
-                    onCompleted={ () => this.props.history.push('/')}>{
+                    onCompleted={ () => refetch().then(() => this.props.history.push('/')) }>{
                       updateClient => (
                         <form className="col-md-9 mt-5"
                           onSubmit={ e => {
                             e.preventDefault();
-                            updateClient({
-                              variables: { input: JSON.parse(localStorage.getItem('client'))}
-                            })
+                            updateClient({ variables: { input: JSON.parse(localStorage.getItem('client')) }})
                           }}>
-                          <Client client={{...data.getClient, _id: id}} />
+                          <Client client={{ ...data.getClient, _id }} />
                           <div className="form-group d-flex justify-content-center bg-primary m-0 p-2 fixed-bottom">
                             <button type="submit" className="btn btn-success">Save Changes</button>
                           </div>
                         </form>
                       )
                     }
-                  </Mutation> */}
+                  </Mutation>
                   {/* Get data for emails component */}
-                  <Query query={GET_EMAILS_BY_CLIENT} variables={{ clientId: id }}>{
+                  {/* <Query query={GET_EMAILS_BY_CLIENT} variables={{ clientId: _id }}>{
                     emails => {
                       if (emails.error) return `Error => ${emails.error.message}`;
                       if (emails.loading) return <Loading/>;
@@ -77,9 +79,9 @@ class UpdateClient extends Component {
                         </form>
                       )
                     }
-                  }</Query>
+                  // }</Query> */}
                   {/* Get data for phones component */}
-                  {/* <Query query={GET_PHONES_BY_CLIENT} variables={{ clientId: id }}>{
+                  {/* <Query query={GET_PHONES_BY_CLIENT} variables={{ clientId: _id }}>{
                     phones => {
                       if (phones.error) return `Error => ${phones.error.message}`;
                       if (phones.loading) return <Loading/>;

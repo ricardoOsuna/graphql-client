@@ -8,6 +8,7 @@ mutation CreateClient($input: CreateClientInput) {
     age
     birthdate
     company
+    status
     emails {
       email
       reference
@@ -30,5 +31,21 @@ mutation UpdateClient($input: UpdateClientInput) {
     birthdate
     company
     status
+  }
+}`;
+
+export const CHANGE_STATUS_CLIENT = gql`
+mutation ChangeStatusClient($input: UpdateClientInput) {
+  updateClient(input: $input) {
+    _id
+    status
+  }
+}`;
+
+export const DESTROY_CLIENT = gql`
+mutation DestroyClient($_id: ID!) {
+  destroyClient(_id: $_id) {
+    _id
+    deletedAt
   }
 }`;
